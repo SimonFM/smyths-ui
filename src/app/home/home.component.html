@@ -1,0 +1,10 @@
+<h1>{{title}}</h1>
+<div>
+  <h3>Products:</h3>
+  <ul>
+    <li *ngFor="let product of products">{{product.name}}</li>
+  </ul>
+  <button class="btn btn-primary" (click)="getProducts();">Get Products</button>
+  <p class="error" *ngIf="errorMessage">{{errorMessage}}</p>
+</div>
+

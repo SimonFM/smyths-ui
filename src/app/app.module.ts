@@ -2,13 +2,13 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-import { AlertModule } from 'ng2-bootstrap/ng2-bootstrap';
-
-import { AppComponent } from './app.component';
+import { AlertModule } from 'ng2-bootstrap';
+import { HomePageComponent } from "./home/home.component";
+import { ProductService } from "./product/product.service";
 
 @NgModule({
   declarations: [
-    AppComponent
+    HomePageComponent
   ],
   imports: [
     BrowserModule,
@@ -16,7 +16,10 @@ import { AppComponent } from './app.component';
     HttpModule,
     AlertModule.forRoot()
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [ProductService],
+  bootstrap: [HomePageComponent]
 })
-export class AppModule { }
+
+export class AppModule {
+
+}
