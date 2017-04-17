@@ -1,0 +1,3 @@
+interface SearchQueryInterface {
+  search : string;
+}
