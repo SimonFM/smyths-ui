@@ -19,8 +19,6 @@ export class LocationService {
 
   /***
    * Returns an array of the locations
-   * @param start
-   * @param end
    * @returns {Observable<Location[]>}
    */
   getLocations(): Observable<Location[]> {
@@ -31,15 +29,7 @@ export class LocationService {
       .catch(this.handleError);
   }
 
-  /**
-   * Makes the Headers for the requests
-   * @returns {Headers}
-   */
-  private makeHeaders() : Headers{
-    return new Headers({ 'Content-Type': 'application/json'});
-  }
-
-  /***
+   /***
    * Makes the request options for the given body.
    * @param body
    * @param url
@@ -59,17 +49,6 @@ export class LocationService {
   }
 
   /***
-   * For a successful result.
-   * @param res
-   * @returns {any|{}}
-   */
-  private extractData(res: Response) {
-    let body = res.json();
-    let locations : Location[] = body || {};
-    return locations;
-  }
-
-  /***
    * For when there's an error.
    * @param error
    * @returns {any}
@@ -86,5 +65,24 @@ export class LocationService {
     }
     console.error(errMsg);
     return Observable.throw(errMsg);
+  }
+
+  /***
+   * For a successful result.
+   * @param res
+   * @returns {any|{}}
+   */
+  private extractData(res: Response) {
+    let body = res.json();
+    let locations : Location[] = body || {};
+    return locations;
+  }
+
+  /**
+   * Makes the Headers for the requests
+   * @returns {Headers}
+   */
+  private makeHeaders() : Headers{
+    return new Headers({ 'Content-Type': 'application/json'});
   }
 }

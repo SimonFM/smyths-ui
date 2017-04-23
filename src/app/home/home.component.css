@@ -1,1 +1,4 @@
-
+.locationOptions:hover {
+  cursor: pointer;
+  background-color: #9f9;
+}

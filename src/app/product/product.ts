@@ -1,3 +1,4 @@
+import {CheckProductResponse} from "../response/CheckProductResponse";
 export class Product {
   id: string;
   name: string;
@@ -6,6 +7,7 @@ export class Product {
   categoryId: string;
   price: number;
   listTypeId : string;
-  brandId: String;
-  url : String;
+  brandId: string;
+  url : string;
+  status : CheckProductResponse;
 }

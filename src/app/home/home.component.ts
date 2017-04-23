@@ -13,7 +13,7 @@ import { Location }                                                             
 export class HomePageComponent implements OnInit {
   products: Product[] = [];
   locations: Location[] = [];
-  selectedLocation : Location;
+  selectedLocation : Location = this.makeDefaultLocation("Select Location");
   searchProducts: Product[] = [];
   searchErrorMessage: any;
   errorMessage: any;
@@ -36,7 +36,8 @@ export class HomePageComponent implements OnInit {
   }
 
   /**
-   *
+   * Sets the selected location to be the one in the drop down.
+   * @param newLocation - The location to update the selected Location to be
    */
   setSelectedLocation(newLocation : Location){
     this.selectedLocation = newLocation;
@@ -44,12 +45,30 @@ export class HomePageComponent implements OnInit {
     console.log("selected location: " + name)
   }
 
+  /**
+   * Returns the selected location or the default location.
+   */
+  getSelectedLocation() : Location {
+    let defaultLocation = this.makeDefaultLocation("Select Location");
+    let hasSelectedLocation : boolean = this.selectedLocation != null;
+    return (hasSelectedLocation)? this.selectedLocation : defaultLocation;
+  }
+
+
   /***
    * Returns an array of the search parameter.
-   * @param searchTerm
+   * @param searchTerm - String to search for.
    */
   getProductsQuery(searchTerm: HTMLInputElement){
-    this.productService.getProductsQuery(searchTerm.value).subscribe(
+    if(this.selectedLocation.smythsId > 0 ){
+
+    } else {
+      this.getSearchProducts(searchTerm.value)
+    }
+  }
+
+  private getSearchProducts(query : string){
+    this.productService.getProductsQuery(query).subscribe(
       products  => {
         if(products.length > 0 && products != null){
           this.clearSearchProduct();
@@ -79,6 +98,25 @@ export class HomePageComponent implements OnInit {
 
   }
 
+  resetLocation(){
+    this.selectedLocation = this.makeDefaultLocation("None")
+  }
+
+  /**
+   * Makes the default Location.
+   * @returns {Location}
+   */
+  makeDefaultLocation(name : string) {
+    let defaultLocation = new Location();
+    defaultLocation.name = name;
+    defaultLocation.id = "";
+    defaultLocation.smythsId = -1;
+    return defaultLocation;
+  }
+
+  /**
+   * Clears the search products.
+   */
   private clearSearchProduct() {
     this.searchProducts = [];
   }

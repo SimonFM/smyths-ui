@@ -1,24 +1,23 @@
 <div id = "searchSection" class="container container-table">
-  <div class="form-group row">
-    <form class="form-group row" role="search">
+  <div class="row">
+    <form class="form-group" role="search">
       <label for="search-form" class="col-2 col-form-label">Search Products</label>
       <div class="input-group add-on">
         <input class="form-control" type="search" id="search-form" placeholder="Search" name="search-term" #searchTerm>
-        <div class="input-group-btn">
-          <div class="dropdown" dropdown >
-            <button class="btn btn-default" dropdown-open>Location <i class="caret"></i></button>
-            <ul class="dropdown-menu">
-              <li *ngFor="let location of locations" (click)="setSelectedLocation(location);">{{location.name}}</li>
-            </ul>
-          </div>
-         </div>
-        <div class="input-group-btn">
+        <span class="input-group-btn">
           <button class="btn btn-default" (click)="getProductsQuery(searchTerm);"><i class="glyphicon glyphicon-search"></i></button>
-        </div>
-        </div>
+        </span>
+      </div>
     </form>
+    <div class="dropdown pull-right" dropdown [dropdownToggle]="false">
+      <label for="search-location" class="col-2 col-form-label">Location: </label>
+      <button id="search-location" class="btn btn-default" dropdown-open> {{getSelectedLocation().name}} <i class="caret"></i></button>
+      <ul class="dropdown-menu">
+        <li class="locationOptions" (click)="resetLocation();">None</li>
+        <li class="locationOptions" *ngFor="let location of locations" (click)="setSelectedLocation(location);">{{location.name}}</li>
+      </ul>
+    </div>
   </div>
-
   <div id="resultsTable">
     <table class="table table-striped">
       <thead>

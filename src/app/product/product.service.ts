@@ -4,13 +4,17 @@ import { Observable }                                                           
 import { Product }                                                                    from './product';
 import { GetProductRequest }                                                          from '../requests/GetProductRequest';
 import { SearchQueryRequest }                                                         from "../requests/SearchQueryRequest";
+import { CheckProductRequest }                                                        from "../requests/CheckProductRequest";
+import { CheckProductResponse }                                                       from "../response/CheckProductResponse";
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
+
 
 @Injectable()
 export class ProductService {
   private baseUrl : string = 'http://localhost:8888/product/';
   private productsUrl : string = this.baseUrl+'all/';
+  private productsAvailabilityUrl : string = this.baseUrl+'available/';
   private searchQueryUrl : string = this.baseUrl+'search/';
 
   /***
@@ -47,11 +51,17 @@ export class ProductService {
   }
 
   /**
-   * Makes the Headers for the requests
-   * @returns {Headers}
+   * Checks a location for the status of the product
+   * @param productId
+   * @param storeId
+   * @returns status of {string}
    */
-  private makeHeaders() : Headers{
-    return new Headers({ 'Content-Type': 'application/json'});
+  getProductAvailability(productId : number, storeId : number) : Observable<CheckProductResponse>{
+    let getStatusBody : CheckProductRequest = new CheckProductRequest(productId, storeId);
+    let options = this.makeRequestOptions(getStatusBody, this.productsAvailabilityUrl, RequestMethod.Post);
+    return this.http.request(this.productsAvailabilityUrl, options)
+      .map(this.extractData)
+      .catch(this.handleError);
   }
 
   /***
@@ -73,16 +83,6 @@ export class ProductService {
     return options;
   }
 
-  /***
-   * For a successful result.
-   * @param res
-   * @returns {any|{}}
-   */
-  private extractData(res: Response) {
-    let body = res.json();
-    let products : Product[] = body || {};
-    return products;
-  }
 
   private extractSearchProductsResponse(res: Response) : Product[] {
     let body = res.json();
@@ -107,5 +107,23 @@ export class ProductService {
     }
     console.error(errMsg);
     return Observable.throw(errMsg);
+  }
+
+  /***
+   * For a successful result.
+   * @param res
+   * @returns {any|{}}
+   */
+  private extractData(res: Response) {
+    let body = res.json();
+    return body || {};
+  }
+
+  /**
+   * Makes the Headers for the requests
+   * @returns {Headers}
+   */
+  private makeHeaders() : Headers{
+    return new Headers({ 'Content-Type': 'application/json'});
   }
 }
