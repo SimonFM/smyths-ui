@@ -1,27 +1,51 @@
-<h1>{{title}}</h1>
-<h2>Search</h2>
-<div id = "search">
-  <form class="navbar-form" role="search">
-    <div class="input-group add-on">
-      <input class="form-control" placeholder="Search" name="srch-term" #searchTerm type="text">
-      <div class="input-group-btn">
-        <button class="btn btn-default" (click)="getProductsQuery(searchTerm);"><i class="glyphicon glyphicon-search"></i></button>
-      </div>
-    </div>
-  </form>
-  <h3>Search Products:</h3>
-  <ul>
-    <li *ngFor="let product of searchProducts">{{product.name}}</li>
-  </ul>
-  <p class="error" *ngIf="searchErrorMessage">{{errorMessage}}</p>
+<div id = "searchSection" class="container container-table">
+  <div class="form-group row">
+    <form class="form-group row" role="search">
+      <label for="search-form" class="col-2 col-form-label">Search Products</label>
+      <div class="input-group add-on">
+        <input class="form-control" type="search" id="search-form" placeholder="Search" name="search-term" #searchTerm>
+        <div class="input-group-btn">
+          <div class="dropdown" dropdown >
+            <button class="btn btn-default" dropdown-open>Location <i class="caret"></i></button>
+            <ul class="dropdown-menu">
+              <li *ngFor="let location of locations" (click)="setSelectedLocation(location);">{{location.name}}</li>
+            </ul>
+          </div>
+         </div>
+        <div class="input-group-btn">
+          <button class="btn btn-default" (click)="getProductsQuery(searchTerm);"><i class="glyphicon glyphicon-search"></i></button>
+        </div>
+        </div>
+    </form>
+  </div>
 
+  <div id="resultsTable">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Smyths link</th>
+        <th>In Stock</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let product of searchProducts">
+        <td>{{product.name}}</td>
+        <td>€{{product.price}}</td>
+        <td><a target="_blank" href="{{product.url}}">Smyths Website</a></td>
+      </tr>
+      </tbody>
+    </table>
+    <p class="error" *ngIf="searchErrorMessage">{{errorMessage}}</p>
+  </div>
 </div>
-<div>
-  <h3>Products:</h3>
-  <ul>
-    <li *ngFor="let product of products">{{product.name}}</li>
-  </ul>
-  <p class="error" *ngIf="errorMessage">{{errorMessage}}</p>
-  <button class="btn btn-primary" (click)="getProducts();">Get Products</button>
-</div>
+<!--<div>-->
+  <!--<h3>Products:</h3>-->
+  <!--<ul>-->
+    <!--<li *ngFor="let product of products">{{product.name}}</li>-->
+  <!--</ul>-->
+  <!--<p class="error" *ngIf="errorMessage">{{errorMessage}}</p>-->
+  <!--<button class="btn btn-primary" (click)="getProducts();">Get Products</button>-->
+<!--</div>-->
 

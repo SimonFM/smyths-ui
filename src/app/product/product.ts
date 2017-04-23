@@ -1,6 +1,3 @@
-/**
- * Created by simon on 14/04/2017.
- */
 export class Product {
   id: string;
   name: string;

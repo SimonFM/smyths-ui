@@ -1,7 +1,8 @@
-import {Component, OnInit}                                  from '@angular/core';
-import {ProductService}                                     from "../product/product.service";
-import {Product}                                            from "../product/product";
-import {forEach} from "@angular/router/src/utils/collection";
+import { Component, OnInit }                                                        from '@angular/core';
+import { ProductService }                                                           from "../product/product.service";
+import { LocationService }                                                          from "../location/location.service";
+import { Product }                                                                  from "../product/product";
+import { Location }                                                                 from '../location/location';
 
 @Component({
   selector: 'home-page',
@@ -9,21 +10,39 @@ import {forEach} from "@angular/router/src/utils/collection";
   styleUrls: ['./home.component.css']
 })
 
-export class HomePageComponent{// implements OnInit{
-  title = 'Smyths Products';
+export class HomePageComponent implements OnInit {
   products: Product[] = [];
+  locations: Location[] = [];
+  selectedLocation : Location;
   searchProducts: Product[] = [];
   searchErrorMessage: any;
   errorMessage: any;
   start = 0;
   end = 100;
 
-  constructor (private productService: ProductService) {}
+  constructor (private productService: ProductService, private locationService : LocationService) {}
+
+  ngOnInit(): void {
+    this.locationService.getLocations().subscribe(
+      allLocations => {
+        if(allLocations.length > 0 && allLocations != null){
+          this.locations = allLocations;
+        }
+      } ,
+      error => {
+        this.errorMessage = error
+      }
+    );
+  }
 
   /**
-   * Is called when the page loads.
+   *
    */
- // ngOnInit() { this.getProducts(); }
+  setSelectedLocation(newLocation : Location){
+    this.selectedLocation = newLocation;
+    let name = newLocation.name;
+    console.log("selected location: " + name)
+  }
 
   /***
    * Returns an array of the search parameter.
@@ -33,7 +52,8 @@ export class HomePageComponent{// implements OnInit{
     this.productService.getProductsQuery(searchTerm.value).subscribe(
       products  => {
         if(products.length > 0 && products != null){
-            this.searchProducts = products;
+          this.clearSearchProduct();
+          this.searchProducts = products;
         }
       },
       error =>{
@@ -44,7 +64,7 @@ export class HomePageComponent{// implements OnInit{
   /**
    * Gets the products between the given indexes.
    */
-  getProducts() {
+  getAllProducts() {
     this.productService.getProducts(this.start, this.end).subscribe(
       products => {
         if(products.length > 0 && products != null){
@@ -57,5 +77,9 @@ export class HomePageComponent{// implements OnInit{
         this.errorMessage = error
       });
 
+  }
+
+  private clearSearchProduct() {
+    this.searchProducts = [];
   }
 }
