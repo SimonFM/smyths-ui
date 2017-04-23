@@ -1,10 +1,12 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
-import { AlertModule } from 'ng2-bootstrap';
-import { HomePageComponent } from "./home/home.component";
-import { ProductService } from "./product/product.service";
+import { BrowserModule }                                                       from '@angular/platform-browser';
+import { NgModule }                                                            from '@angular/core';
+import { FormsModule }                                                         from '@angular/forms';
+import { HttpModule }                                                          from '@angular/http';
+import { HomePageComponent }                                                   from "./home/home.component";
+import { DropdownModule }                                                      from "ngx-dropdown";
+import { ProductService }                                                      from "./product/product.service";
+import { LocationService }                                                     from "./location/location.service";
+import { platformBrowserDynamic }                                              from "@angular/platform-browser-dynamic";
 
 @NgModule({
   declarations: [
@@ -14,12 +16,19 @@ import { ProductService } from "./product/product.service";
     BrowserModule,
     FormsModule,
     HttpModule,
-    AlertModule.forRoot()
+    DropdownModule
   ],
-  providers: [ProductService],
-  bootstrap: [HomePageComponent]
+  providers: [
+    ProductService,
+    LocationService
+  ],
+  bootstrap: [
+    HomePageComponent
+  ]
 })
 
 export class AppModule {
 
 }
+
+platformBrowserDynamic().bootstrapModule(AppModule);
