@@ -6,8 +6,11 @@ import { GetProductRequest }                                                    
 import { SearchQueryRequest }                                                         from "../requests/SearchQueryRequest";
 import { CheckProductRequest }                                                        from "../requests/CheckProductRequest";
 import { CheckProductResponse }                                                       from "../response/CheckProductResponse";
+import { SearchQueryResponse }                                                        from "../response/SearchQueryResponse";
+
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
+
 
 
 @Injectable()
@@ -25,14 +28,40 @@ export class ProductService {
 
   /***
    * Returns an array of the search parameter.
-   * @param searchTerm
+   * @param searchTerm - product to search for.
    * @return The products associated with the search term.
    */
-  getProductsQuery(searchTerm: string) : Observable<Product[]> {
+  getProductsQuery(searchTerm: string) : Observable<SearchQueryResponse> {
     let searchQueryBody = new SearchQueryRequest(searchTerm);
     let options = this.makeRequestOptions(searchQueryBody, this.searchQueryUrl, RequestMethod.Post);
     return this.http.request(this.productsUrl, options)
-      .map(this.extractSearchProductsResponse)
+      .map(this.extractData)
+      .catch(this.handleError);
+  }
+
+  /***
+   * Returns an array of the search parameter in location.
+   * @param searchTerm - product to search for.
+   * @param locationId - location to search in
+   * @return The products associated with the search term.
+   */
+  getProductsQueryForLocation(searchTerm: string, locationId :number) : Observable<SearchQueryResponse> {
+    let searchQueryBody = new SearchQueryRequest(searchTerm, locationId);
+    let options = this.makeRequestOptions(searchQueryBody, this.searchQueryUrl, RequestMethod.Post);
+    return this.http.request(this.productsUrl, options)
+      .map(this.extractData)
+      .catch(this.handleError);
+  }
+
+  /**
+   * Sends the product request for the query provided.
+   * @param searchQueryBody
+   * @returns {Observable<R|T>}
+   */
+  private sendProductAvailabilityRequest(searchQueryBody: SearchQueryRequest) : Observable<SearchQueryResponse> {
+    let options = this.makeRequestOptions(searchQueryBody, this.searchQueryUrl, RequestMethod.Post);
+    return this.http.request(this.productsUrl, options)
+      .map(this.extractData)
       .catch(this.handleError);
   }
 

@@ -1,0 +1,4 @@
+interface SearchQueryResponseInterface {
+  products;
+  productStatus;
+}

@@ -3,6 +3,8 @@ import { ProductService }                                                       
 import { LocationService }                                                          from "../location/location.service";
 import { Product }                                                                  from "../product/product";
 import { Location }                                                                 from '../location/location';
+import {SearchQueryResponse} from "../response/SearchQueryResponse";
+import {CheckProductResponse} from "../response/CheckProductResponse";
 
 @Component({
   selector: 'home-page',
@@ -12,6 +14,7 @@ import { Location }                                                             
 
 export class HomePageComponent implements OnInit {
   products: Product[] = [];
+  productsStatus: CheckProductResponse[] = [];
   locations: Location[] = [];
   selectedLocation : Location = this.makeDefaultLocation("Select Location");
   searchProducts: Product[] = [];
@@ -69,10 +72,16 @@ export class HomePageComponent implements OnInit {
 
   private getSearchProducts(query : string){
     this.productService.getProductsQuery(query).subscribe(
-      products  => {
+      queryResponse  => {
+        let products = queryResponse.products;
+        let status = queryResponse.productStatus;
         if(products.length > 0 && products != null){
           this.clearSearchProduct();
           this.searchProducts = products;
+        }
+        if(status != null && status.length > 0){
+          this.clearSearchProductStatus();
+          this.productsStatus = status;
         }
       },
       error =>{
@@ -119,5 +128,12 @@ export class HomePageComponent implements OnInit {
    */
   private clearSearchProduct() {
     this.searchProducts = [];
+
   }
+  /**
+   * Clears the search status.
+   */
+  private clearSearchProductStatus(){
+      this.productsStatus = [];
+    }
 }
