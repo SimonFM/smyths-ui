@@ -1,9 +1,9 @@
 export class SearchQueryRequest implements SearchQueryInterface {
   search: string;
-  locationId : number;
+  locationName : string;
 
-  constructor(search : string, location? : number ){
+  constructor(search : string, location? : string ){
     this.search = search;
-    this.locationId = (location)? location : -1;
+    this.locationName = (location)? location : "";
   }
 }

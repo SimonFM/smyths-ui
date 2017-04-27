@@ -2,9 +2,10 @@ import { Injectable }                                                           
 import { Http, Response, Headers, ResponseContentType, RequestOptions, RequestMethod} from '@angular/http';
 import { Observable }                                                                 from 'rxjs/Observable';
 import { Location }                                                                   from './location';
+import { GetAllLocationsRequest }                                                     from "../requests/GetAllLocationsRequest";
+import { GetAllLocationsResponse }                                                    from "../response/GetAllLocationsResponse";
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
-import { GetAllLocationsRequest } from "../requests/GetAllLocationsRequest";
 
 @Injectable()
 export class LocationService {
@@ -21,7 +22,7 @@ export class LocationService {
    * Returns an array of the locations
    * @returns {Observable<Location[]>}
    */
-  getLocations(): Observable<Location[]> {
+  getLocations(): Observable<GetAllLocationsResponse> {
     let getAllLocationsRequest : GetAllLocationsRequest = new GetAllLocationsRequest();
     let options = this.makeRequestOptions(getAllLocationsRequest, this.locationsUrl, RequestMethod.Get);
     return this.http.request(this.locationsUrl, options)
@@ -74,8 +75,8 @@ export class LocationService {
    */
   private extractData(res: Response) {
     let body = res.json();
-    let locations : Location[] = body || {};
-    return locations;
+    let response : GetAllLocationsResponse = body || {};
+    return response;
   }
 
   /**

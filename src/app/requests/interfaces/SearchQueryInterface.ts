@@ -1,4 +1,4 @@
 interface SearchQueryInterface {
   search : string;
-  locationId : number;
+  locationName : string;
 }

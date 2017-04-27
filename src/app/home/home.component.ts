@@ -3,8 +3,8 @@ import { ProductService }                                                       
 import { LocationService }                                                          from "../location/location.service";
 import { Product }                                                                  from "../product/product";
 import { Location }                                                                 from '../location/location';
-import {SearchQueryResponse} from "../response/SearchQueryResponse";
-import {CheckProductResponse} from "../response/CheckProductResponse";
+import { Region }                                                                   from "../location/region";
+import { CheckProductResponse }                                                     from "../response/CheckProductResponse";
 
 @Component({
   selector: 'home-page',
@@ -16,6 +16,7 @@ export class HomePageComponent implements OnInit {
   products: Product[] = [];
   productsStatus: CheckProductResponse[] = [];
   locations: Location[] = [];
+  regions: Region[] = [];
   selectedLocation : Location = this.makeDefaultLocation("Select Location");
   searchProducts: Product[] = [];
   searchErrorMessage: any;
@@ -27,9 +28,18 @@ export class HomePageComponent implements OnInit {
 
   ngOnInit(): void {
     this.locationService.getLocations().subscribe(
-      allLocations => {
-        if(allLocations.length > 0 && allLocations != null){
-          this.locations = allLocations;
+      locationsResponse => {
+        let newLocations : Location[] = [];
+        if(locationsResponse != null){
+          if(locationsResponse.data.length > 0 && locationsResponse.data != null){
+            this.regions  = locationsResponse.data;
+            for(let region of this.regions){
+              for(let location of region.regionPos){
+                newLocations.push(location)
+              }
+            }
+          }
+          this.locations = newLocations;
         }
       } ,
       error => {
@@ -57,21 +67,16 @@ export class HomePageComponent implements OnInit {
     return (hasSelectedLocation)? this.selectedLocation : defaultLocation;
   }
 
-
   /***
    * Returns an array of the search parameter.
    * @param searchTerm - String to search for.
    */
   getProductsQuery(searchTerm: HTMLInputElement){
-    if(this.selectedLocation.smythsId > 0 ){
-
-    } else {
-      this.getSearchProducts(searchTerm.value)
-    }
+    this.getSearchProducts(searchTerm.value)
   }
 
   private getSearchProducts(query : string){
-    this.productService.getProductsQuery(query).subscribe(
+    this.productService.getProductsQueryForLocation(query, this.selectedLocation.name).subscribe(
       queryResponse  => {
         let products = queryResponse.products;
         let status = queryResponse.productStatus;
@@ -82,6 +87,7 @@ export class HomePageComponent implements OnInit {
         if(status != null && status.length > 0){
           this.clearSearchProductStatus();
           this.productsStatus = status;
+          this.populateProductStatus();
         }
       },
       error =>{
@@ -111,6 +117,12 @@ export class HomePageComponent implements OnInit {
     this.selectedLocation = this.makeDefaultLocation("None")
   }
 
+  private populateProductStatus() {
+    for (let i = 0; i < this.productsStatus.length; i++) {
+      this.searchProducts[i].status = this.productsStatus[i]
+    }
+  }
+
   /**
    * Makes the default Location.
    * @returns {Location}
@@ -118,8 +130,6 @@ export class HomePageComponent implements OnInit {
   makeDefaultLocation(name : string) {
     let defaultLocation = new Location();
     defaultLocation.name = name;
-    defaultLocation.id = "";
-    defaultLocation.smythsId = -1;
     return defaultLocation;
   }
 

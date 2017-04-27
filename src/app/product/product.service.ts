@@ -45,11 +45,11 @@ export class ProductService {
    * @param locationId - location to search in
    * @return The products associated with the search term.
    */
-  getProductsQueryForLocation(searchTerm: string, locationId :number) : Observable<SearchQueryResponse> {
-    let searchQueryBody = new SearchQueryRequest(searchTerm, locationId);
+  getProductsQueryForLocation(searchTerm: string, locationName : string) : Observable<SearchQueryResponse> {
+    let searchQueryBody = new SearchQueryRequest(searchTerm, locationName);
     let options = this.makeRequestOptions(searchQueryBody, this.searchQueryUrl, RequestMethod.Post);
     return this.http.request(this.productsUrl, options)
-      .map(this.extractData)
+      .map(this.extractSearchProductsResponse)
       .catch(this.handleError);
   }
 
@@ -113,10 +113,14 @@ export class ProductService {
   }
 
 
-  private extractSearchProductsResponse(res: Response) : Product[] {
+  private extractSearchProductsResponse(res: Response) : SearchQueryResponse {
     let body = res.json();
-    let products : Product[] = JSON.parse(body.products) || {};
-    return products;
+    let products : Product[] = body.products || {};
+    let status : CheckProductResponse[] = body.productsStatus || {};
+    let message : string = body.message || "Null Body received, Error parsing response - 4523";
+    let error : string = body.error || "Null Error received.///";
+    let searchQueryResponse = new SearchQueryResponse(error, message, products, status);
+    return searchQueryResponse;
   }
 
   /***

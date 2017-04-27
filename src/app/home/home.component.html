@@ -14,7 +14,7 @@
       <button id="search-location" class="btn btn-default" dropdown-open> {{getSelectedLocation().name}} <i class="caret"></i></button>
       <ul class="dropdown-menu">
         <li class="locationOptions" (click)="resetLocation();">None</li>
-        <li class="locationOptions" *ngFor="let location of locations" (click)="setSelectedLocation(location);">{{location.name}}</li>
+        <li class="locationOptions" *ngFor="let location of locations" (click)="setSelectedLocation(location);">{{location.displayName}}</li>
       </ul>
     </div>
   </div>
@@ -33,6 +33,7 @@
         <td>{{product.name}}</td>
         <td>€{{product.price}}</td>
         <td><a target="_blank" href="{{product.url}}">Smyths Website</a></td>
+        <td>{{product.status || ""}}</td>
       </tr>
       </tbody>
     </table>
