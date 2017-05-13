@@ -22,7 +22,7 @@ export class LocationService {
    * Returns an array of the locations
    * @returns {Observable<Location[]>}
    */
-  getLocations(): Observable<GetAllLocationsResponse> {
+  getLocations(): Observable<Location[]> {
     let getAllLocationsRequest : GetAllLocationsRequest = new GetAllLocationsRequest();
     let options = this.makeRequestOptions(getAllLocationsRequest, this.locationsUrl, RequestMethod.Get);
     return this.http.request(this.locationsUrl, options)
@@ -75,7 +75,7 @@ export class LocationService {
    */
   private extractData(res: Response) {
     let body = res.json();
-    let response : GetAllLocationsResponse = body || {};
+    let response : Location[] = body || {};
     return response;
   }
 

@@ -18,27 +18,50 @@
       </ul>
     </div>
   </div>
-  <div id="resultsTable">
+  <h3>Histories</h3>
+  <div id="historyResultsTable">
     <table class="table table-striped">
       <thead>
       <tr>
         <th>Name</th>
         <th>Price</th>
-        <th>Smyths link</th>
-        <th>In Stock</th>
+        <th>Date</th>
+        <th>Product Reference</th>
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let product of searchProducts">
-        <td>{{product.name}}</td>
-        <td>€{{product.price}}</td>
-        <td><a target="_blank" href="{{product.url}}">Smyths Website</a></td>
-        <td>{{product.status || ""}}</td>
+      <tr *ngFor="let hist of histories">
+        <td>{{hist.name}}</td>
+        <td>€{{hist.price}}</td>
+        <td>{{convertToDisplayedTime(hist.date.millis)}}</td>
+        <td>{{hist.productId}}</td>
       </tr>
       </tbody>
     </table>
-    <p class="error" *ngIf="searchErrorMessage">{{errorMessage}}</p>
+    <p class="error" *ngIf="histoyErrorMessage">{{histoyErrorMessage}}</p>
   </div>
+  <h3>Product</h3>
+  <div id="productsResultsTable">
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>Name</th>
+      <th>Price</th>
+      <th>Smyths link</th>
+      <th>In Stock</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let product of searchProducts">
+      <td>{{product.name}}</td>
+      <td>€{{product.price}}</td>
+      <td><a target="_blank" href="{{product.url}}">Smyths Website</a></td>
+      <td>{{product.status || ""}}</td>
+    </tr>
+    </tbody>
+  </table>
+  <p class="error" *ngIf="searchErrorMessage">{{searchErrorMessage}}</p>
+</div>
 </div>
 <!--<div>-->
   <!--<h3>Products:</h3>-->

@@ -6,6 +6,7 @@ import { HomePageComponent }                                                   f
 import { DropdownModule }                                                      from "ngx-dropdown";
 import { ProductService }                                                      from "./product/product.service";
 import { LocationService }                                                     from "./location/location.service";
+import { HistoryService }                                                      from "./history/history.service";
 import { platformBrowserDynamic }                                              from "@angular/platform-browser-dynamic";
 
 @NgModule({
@@ -20,7 +21,8 @@ import { platformBrowserDynamic }                                              f
   ],
   providers: [
     ProductService,
-    LocationService
+    LocationService,
+    HistoryService
   ],
   bootstrap: [
     HomePageComponent

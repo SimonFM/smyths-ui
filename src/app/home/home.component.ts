@@ -1,10 +1,12 @@
 import { Component, OnInit }                                                        from '@angular/core';
 import { ProductService }                                                           from "../product/product.service";
 import { LocationService }                                                          from "../location/location.service";
+import { HistoryService }                                                           from "../history/history.service";
 import { Product }                                                                  from "../product/product";
 import { Location }                                                                 from '../location/location';
 import { Region }                                                                   from "../location/region";
 import { CheckProductResponse }                                                     from "../response/CheckProductResponse";
+import * as moment from "moment";
 
 @Component({
   selector: 'home-page',
@@ -14,6 +16,7 @@ import { CheckProductResponse }                                                 
 
 export class HomePageComponent implements OnInit {
   products: Product[] = [];
+  histories: History[] = [];
   productsStatus: CheckProductResponse[] = [];
   locations: Location[] = [];
   regions: Region[] = [];
@@ -21,22 +24,20 @@ export class HomePageComponent implements OnInit {
   searchProducts: Product[] = [];
   searchErrorMessage: any;
   errorMessage: any;
+  histoyErrorMessage: any;
   start = 0;
   end = 100;
 
-  constructor (private productService: ProductService, private locationService : LocationService) {}
+  constructor (private productService: ProductService, private locationService : LocationService, private historyService : HistoryService) {}
 
   ngOnInit(): void {
     this.locationService.getLocations().subscribe(
       locationsResponse => {
         let newLocations : Location[] = [];
         if(locationsResponse != null){
-          if(locationsResponse.data.length > 0 && locationsResponse.data != null){
-            this.regions  = locationsResponse.data;
-            for(let region of this.regions){
-              for(let location of region.regionPos){
-                newLocations.push(location)
-              }
+          if(locationsResponse.length > 0 && locationsResponse != null){
+            for(let location of locationsResponse){
+              newLocations.push(location)
             }
           }
           this.locations = newLocations;
@@ -76,22 +77,15 @@ export class HomePageComponent implements OnInit {
   }
 
   private getSearchProducts(query : string){
-    this.productService.getProductsQueryForLocation(query, this.selectedLocation.name).subscribe(
+    this.historyService.getProductsQuery(query, this.start, this.end).subscribe(
       queryResponse  => {
-        let products = queryResponse.products;
-        let status = queryResponse.productStatus;
-        if(products.length > 0 && products != null){
-          this.clearSearchProduct();
-          this.searchProducts = products;
-        }
-        if(status != null && status.length > 0){
-          this.clearSearchProductStatus();
-          this.productsStatus = status;
-          this.populateProductStatus();
+        if(queryResponse.histories.length > 0 && queryResponse != null){
+          this.clearHistories();
+          this.histories = queryResponse.histories;
         }
       },
       error =>{
-        this.searchErrorMessage = error;
+        this.histoyErrorMessage = error;
       });
   }
 
@@ -133,6 +127,13 @@ export class HomePageComponent implements OnInit {
     return defaultLocation;
   }
 
+  /*
+   *
+   */
+   convertToDisplayedTime(time : number) : string{
+     return moment(time).format("DD-MM-YYYY");
+   }
+
   /**
    * Clears the search products.
    */
@@ -145,5 +146,9 @@ export class HomePageComponent implements OnInit {
    */
   private clearSearchProductStatus(){
       this.productsStatus = [];
-    }
+  }
+
+  private clearHistories(){
+    this.histories = [];
+  }
 }
