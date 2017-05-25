@@ -12,15 +12,15 @@ This project was generated with [angular-cli](https://github.com/angular/angular
 
 ### Planned Features.
 * Graphing of item prices to show distribution over time
-..1. Filtering intevals by date, price.
-..2. Allowing for different styles of graphs
+  * Filtering intevals by date, price.
+  * Allowing for different styles of graphs
 * Users ~~Ugh~~ Yay!
-..1. Logins
-..2. Favourites
-..3. Item alerts
+  * Logins
+  * Favourites
+  * Item alerts
 * Smarter Search
-..1. Research Algorithms
-..2. Improve Database querying
+  * Research Algorithms
+  * Improve Database querying
 * Migrate from POSTGIS to something more kotlin friendly (it's awkward to use)
 * Make a docker instance 
 
